@@ -1,20 +1,15 @@
 <?php
-
-include_once '../models/Book.php';
-
 class BookController {
-    private $book;
+    private $pdo;
 
     public function __construct($pdo) {
-        $this->book = new Book($pdo);
+        $this->pdo = $pdo;
     }
 
     public function listBooks() {
-        return $this->book->getAllBooks();
-    }
-
-    public function addBook($title, $author, $genre, $published_date, $isbn) {
-        return $this->book->addBook($title, $author, $genre, $published_date, $isbn);
+        $stmt = $this->pdo->prepare("SELECT * FROM books");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

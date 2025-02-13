@@ -1,5 +1,5 @@
 <footer>
-    <p>&copy; <?php echo date("Y"); ?> <?php echo SITE_NAME; ?>. Բոլոր իրավունքները պաշտպանված են։</p>
-</footer>
+        <p>&copy; 2025</p>
+    </footer>
 </body>
 </html>

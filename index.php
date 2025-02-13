@@ -9,11 +9,13 @@ $books = $bookController->listBooks();
 include 'views/header.php';
 ?>
 
-<h1>Բոլոր գրքերը</h1>
-<ul>
-    <?php foreach ($books as $book): ?>
-        <li><?php echo $book['title']; ?> - <?php echo $book['author']; ?></li>
-    <?php endforeach; ?>
-</ul>
+<main>
+    <h1>Բոլոր գրքերը</h1>
+    <ul>
+        <?php foreach ($books as $book): ?>
+            <li><?php echo htmlspecialchars($book['title'], ENT_QUOTES); ?> - <?php echo htmlspecialchars($book['author'], ENT_QUOTES); ?></li>
+        <?php endforeach; ?>
+    </ul>
+</main>
 
 <?php include 'views/footer.php'; ?>
