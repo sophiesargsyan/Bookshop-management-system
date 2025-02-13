@@ -1,3 +1,50 @@
+<?php
+require_once "includes/db.php";
+
+$error = "";
+$success = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = trim($_POST["username"]);
+    $email = trim($_POST["email"]);
+    $password = trim($_POST["password"]);
+    $full_name = trim($_POST["full_name"]);
+
+    if (empty($username) || empty($email) || empty($password) || empty($full_name)) {
+        $error = "Please fill in all fields.";
+    }
+
+    if (empty($error) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address.";
+    }
+
+    if (empty($error) && !preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $password)) {
+        $error = "Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character.";
+    }
+
+    if (empty($error)) {
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            $error = "This email is already registered.";
+        }
+    }
+
+
+    if (empty($error)) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, full_name, created_at) VALUES (?, ?, ?, ?, NOW())");
+        if ($stmt->execute([$username, $email, $hashed_password, $full_name])) {
+            header("Location: index.php");
+            exit;
+        } else {
+            $error = "Something went wrong.";
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
